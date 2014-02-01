@@ -20,39 +20,38 @@ class TouchPointListener(Leap.Listener):
         hands = frame.hands
         left = frame.hand(self.lefthand)
         right = frame.hand(self.righthand)
-        if left.is_valid:
+        if left.is_valid and ((not left.id == right.id) or len(hands) == 1):
             self.leftheight = left.stabilized_palm_position.y
-            self.leftsphere = right.sphere_radius
+            self.leftsphere = left.sphere_radius
         else:
-            self.setHands(hands)
+            if len(hands) == 1:
+                self.lefthand = hands[0].id
+            elif len(hands) > 1:
+                l = hands[0]
+                for hand in hands:
+                    if hand.palm_position.x < l.palm_position.x:
+                        l = hand
+                self.lefthand = l.id
+            else: #no hands on screen
+                self.leftheight = 0
 
-        if right.is_valid:
-            self.rightheight = left.stabilized_palm_position.y
+        if right.is_valid and ((not left.id == right.id) or len(hands) == 1):
+            self.rightheight = right.stabilized_palm_position.y
             self.rightsphere = right.sphere_radius
         else:
-            self.setHands(hands)
+            if len(hands) == 1:
+                self.righthand = hands[0].id
+            elif len(hands) > 1:
+                r = hands[0]
+                for hand in hands:
+                    if hand.palm_position.x > r.palm_position.x:
+                        r = hand
+                self.righthand = r.id
+            else: #no hands on screen
+                self.rightheight = 0
 
-        print "Left: %d, Right: %d" % (self.leftheight, self.rightheight)
+        print "Left: %d, Right: %d, Hands: %d" % (self.leftheight, self.rightheight, len(hands))
 
-    def setHands(self, hands):
-        if len(hands) == 1:
-            self.lefthand = hands[0].id
-            self.righthand = hands[0].id
-        elif len(hands) > 1:
-            l = hands[0]
-            r = hands[0]
-            for hand in hands:
-                if hand.palm_position.x < l.palm_position.x:
-                    l = hand
-                if hand.palm_position.x > r.palm_position.x:
-                    r = hand
-            self.lefthand = l.id
-            self.righthand = r.id
-        else: #no hands on screen
-            self.leftheight = 0
-            self.rightheight = 0
-
-        '''
         interactionBox = frame.interaction_box
         
         for pointable in frame.pointables:
