@@ -76,7 +76,7 @@ class TouchPointListener(Leap.Listener):
 
 class MusicThread(threading.Thread):
     def __init__(self, sound1, sound2):
-        pygame.mixer.init()
+        pygame.mixer.init(frequency = 24000)
         threading.Thread.__init__(self)
         self.sound1 = pygame.mixer.Sound(file=sound1)
         self.sound2 = pygame.mixer.Sound(file=sound2)
@@ -103,8 +103,8 @@ class MusicThread(threading.Thread):
                     self.play_command = -1
                     self.playing = "Started"
                 if self.playing == "Started":
-                    self.sound1_volume = float(self.listener.leftheight - 80) / float(200)
-                    self.sound2_volume = float(self.listener.rightheight - 80) / float(200)
+                    self.sound1_volume = float(self.listener.leftheight - 120) / float(250)
+                    self.sound2_volume = float(self.listener.rightheight - 120) / float(250)
                     if self.sound1_volume < 0.0:
                         self.sound1_volume = 0.0
                     if self.sound1_volume > 1.0:
