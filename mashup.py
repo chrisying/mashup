@@ -60,8 +60,8 @@ class TouchPointListener(Leap.Listener):
         
         colorl = self.rgb_to_hex(((255-self.leftsphere) % 256, (2*self.leftsphere) % 256, 0))
         colorr = self.rgb_to_hex(((255-self.rightsphere) % 256, (2*self.rightsphere) % 256, 0))
-        self.paintCanvas.create_rectangle(200, 600-self.leftheight, 400, 600, fill = colorl, outline = "")
-        self.paintCanvas.create_rectangle(600, 600-self.rightheight, 800, 600, fill = colorr, outline = "")
+        self.paintCanvas.create_rectangle(200, 650-self.leftheight, 400, 650, fill = colorl, outline = "")
+        self.paintCanvas.create_rectangle(600, 650-self.rightheight, 800, 650, fill = colorr, outline = "")
 
     def set_canvas(self, canvas):
         self.paintCanvas = canvas
@@ -72,19 +72,20 @@ class TouchPointListener(Leap.Listener):
 class PaintBox(Frame):
 
     def __init__( self ):
-        Frame.__init__(self, background = "#F2A04E")
+        Frame.__init__(self, background = "#080808")
         self.leap = Leap.Controller()
         self.painter = TouchPointListener()
         self.leap.add_listener(self.painter)
         self.pack( expand = YES, fill = BOTH )
         self.master.title( "LeapMashup" )
         self.master.geometry( "1000x800" )
+        self.bgcol = "#040404"
 
-        self.title = Label(self, text = 'Welcome to Leap Mashup!', font = ("Impact", 30), background = "#F2A04E")
+        self.title = Label(self, text = 'Welcome to Leap Mashup!', font = ("Impact", 40), background = self.bgcol, foreground = "#ffffff")
         self.title.pack()
 
         # filenames
-        self.fileframe = LabelFrame(self, text = "Files", background = "#F2A04E")
+        self.fileframe = LabelFrame(self, text = "Files", background = self.bgcol, foreground = "#ffffff", relief = SUNKEN)
         self.fileframe.pack()
 
         self.f1 = LabelFrame(self.fileframe)
@@ -108,8 +109,19 @@ class PaintBox(Frame):
         self.start = Button(self, text = "Begin mashing!", command = self.start)
         self.start.pack()
 
+        self.bpanel = LabelFrame(self)
+        self.bpanel.pack(side = "bottom")
+        self.save = Button(self.bpanel, text = "Save")
+        self.save.pack(side = "left")
+        self.upload = Button(self.bpanel, text = "Upload")
+        self.upload.pack(side = "left")
+        self.share = Button(self.bpanel, text = "Share")
+        self.share.pack(side = "left")
+        self.skynet = Button(self.bpanel, text = "Activate Skynet")
+        self.skynet.pack(side = "left")
+
         # create Canvas component
-        self.paintCanvas = Canvas(self, width = "1000", height = "600", bd = 0, background = "#F2A04E")
+        self.paintCanvas = Canvas(self, width = "1000", height = "650", bd = 0, background = self.bgcol)
         self.paintCanvas.pack()
         self.painter.set_canvas(self.paintCanvas)
 
