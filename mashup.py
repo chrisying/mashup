@@ -1,6 +1,7 @@
 from Tkinter import *
 from tkFileDialog import askopenfilename
 import Leap
+import webbrowser
 
 class TouchPointListener(Leap.Listener):
     def on_init(self, controller):
@@ -81,7 +82,11 @@ class PaintBox(Frame):
         self.master.geometry( "1000x800" )
         self.bgcol = "#040404"
 
-        self.title = Label(self, text = 'Welcome to Leap Mashup!', font = ("Impact", 40), background = self.bgcol, foreground = "#ffffff")
+        self.log = PhotoImage(file = "logo.gif")
+        self.logo = Canvas(self, width = 800, height = 100, background = "#080808", highlightthickness = 0)
+        self.logo.pack()
+        self.logo.create_image(0, 0, image = self.log, anchor = NW)
+        self.title = Label(self, text = 'a Leap Mashup app', font = ("Helvetica", 20), background = self.bgcol, foreground = "#ffffff")
         self.title.pack()
 
         # filenames
@@ -117,11 +122,11 @@ class PaintBox(Frame):
         self.upload.pack(side = "left")
         self.share = Button(self.bpanel, text = "Share")
         self.share.pack(side = "left")
-        self.skynet = Button(self.bpanel, text = "Activate Skynet")
+        self.skynet = Button(self.bpanel, text = "Activate Skynet", command = self.sky)
         self.skynet.pack(side = "left")
 
         # create Canvas component
-        self.paintCanvas = Canvas(self, width = "1000", height = "650", bd = 0, background = self.bgcol)
+        self.paintCanvas = Canvas(self, width = "1000", height = "650", bd = 0, background = self.bgcol, highlightthickness = 0)
         self.paintCanvas.pack()
         self.painter.set_canvas(self.paintCanvas)
 
@@ -155,6 +160,9 @@ class PaintBox(Frame):
         if f1.get()[-4:] != ".wav" or f2.get()[-4:] != ".wav":
             return False
         return True
+
+    def sky(self):
+        webbrowser.open("http://youtu.be/_Wlsd9mljiU?t=2m51s")
 
 def main():
     PaintBox().mainloop()
