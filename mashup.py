@@ -6,9 +6,9 @@ class TouchPointListener(Leap.Listener):
         self.lefthand = 0 #id
         self.righthand = 0 
         self.leftheight = 0 #y-axis
-        self.rightheight = 0
+        self.rightheight = 0 #varies from 0ish->200ish
         self.leftsphere = 0 #curvature
-        self.rightsphere = 0
+        self.rightsphere = 0 #varies from 0ish->200+ish
         print "Initialized"
 
     def on_connect(self, controller):
@@ -34,6 +34,7 @@ class TouchPointListener(Leap.Listener):
                 self.lefthand = l.id
             else: #no hands on screen
                 self.leftheight = 0
+                self.leftsphere = 0
 
         if right.is_valid and ((not left.id == right.id) or len(hands) == 1):
             self.rightheight = right.stabilized_palm_position.y
@@ -49,25 +50,15 @@ class TouchPointListener(Leap.Listener):
                 self.righthand = r.id
             else: #no hands on screen
                 self.rightheight = 0
+                self.leftsphere = 0
 
-        print "Left: %d, Right: %d, Hands: %d" % (self.leftheight, self.rightheight, len(hands))
-
-        interactionBox = frame.interaction_box
+        print "Left: %d, Right: %d" % (self.leftheight, self.rightheight)
+        print "LSphere: %d, RSphere: %d" % (self.leftsphere, self.rightsphere)
         
-        for pointable in frame.pointables:
-            normalizedPosition = interactionBox.normalize_point(pointable.tip_position)
-            if(pointable.touch_distance > 0 and pointable.touch_zone != Leap.Pointable.ZONE_NONE):
-                color = self.rgb_to_hex((0, 255 - 255 * pointable.touch_distance, 0))
-                
-            elif(pointable.touch_distance <= 0):
-                color = self.rgb_to_hex((-255 * pointable.touch_distance, 0, 0))
-                #color = self.rgb_to_hex((255,0,0))
-                
-            else:
-                color = self.rgb_to_hex((0,0,200))
-                
-            self.draw(normalizedPosition.x * 800, 600 - normalizedPosition.y * 600, 40, 40, color)
-        '''
+        colorl = self.rgb_to_hex((255-self.leftsphere, self.leftsphere, 0))
+        colorr = self.rgb_to_hex((255-self.rightsphere, self.rightsphere, 0))                
+        self.draw(250, 600-self.leftheight * 2, self.leftsphere, self.leftsphere, colorl)
+        self.draw(550, 600-self.rightheight * 2, self.rightsphere, self.rightsphere, colorr)
 
     def draw(self, x, y, width, height, color):
         self.paintCanvas.create_oval( x, y, x + width, y + height, fill = color, outline = "")
