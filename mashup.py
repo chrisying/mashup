@@ -17,7 +17,7 @@ class TouchPointListener(Leap.Listener):
         print "Connected"
 
     def on_frame(self, controller):
-        if self.STAT == 1:
+        if self.STAT == 0:
             self.paintCanvas.delete("all")
             frame = controller.frame()
             hands = frame.hands
@@ -58,13 +58,10 @@ class TouchPointListener(Leap.Listener):
         print "Left: %d, Right: %d" % (self.leftheight, self.rightheight)
         print "LSphere: %d, RSphere: %d" % (self.leftsphere, self.rightsphere)
         
-        colorl = self.rgb_to_hex((255-self.leftsphere, self.leftsphere, 0))
-        colorr = self.rgb_to_hex((255-self.rightsphere, self.rightsphere, 0))                
-        self.draw(250, 600-self.leftheight * 2, self.leftsphere, self.leftsphere, colorl)
-        self.draw(550, 600-self.rightheight * 2, self.rightsphere, self.rightsphere, colorr)
-
-    def draw(self, x, y, width, height, color):
-        self.paintCanvas.create_oval( x, y, x + width, y + height, fill = color, outline = "")
+        colorl = self.rgb_to_hex(((255-self.leftsphere) % 256, (2*self.leftsphere) % 256, 0))
+        colorr = self.rgb_to_hex(((255-self.rightsphere) % 256, (2*self.rightsphere) % 256, 0))
+        self.paintCanvas.create_rectangle(200, 600-self.leftheight, 400, 600, fill = colorl, outline = "")
+        self.paintCanvas.create_rectangle(600, 600-self.rightheight, 800, 600, fill = colorr, outline = "")
 
     def set_canvas(self, canvas):
         self.paintCanvas = canvas
@@ -112,7 +109,7 @@ class PaintBox(Frame):
         self.start.pack()
 
         # create Canvas component
-        self.paintCanvas = Canvas( self, width = "800", height = "600" )
+        self.paintCanvas = Canvas(self, width = "1000", height = "600", bd = 2)
         self.paintCanvas.pack()
         self.painter.set_canvas(self.paintCanvas)
 
