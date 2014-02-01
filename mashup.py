@@ -72,7 +72,7 @@ class TouchPointListener(Leap.Listener):
 class PaintBox(Frame):
 
     def __init__( self ):
-        Frame.__init__( self )
+        Frame.__init__(self, background = "#F2A04E")
         self.leap = Leap.Controller()
         self.painter = TouchPointListener()
         self.leap.add_listener(self.painter)
@@ -80,11 +80,11 @@ class PaintBox(Frame):
         self.master.title( "LeapMashup" )
         self.master.geometry( "1000x800" )
 
-        self.title = Label(self, text = 'Welcome to Leap Mashup!', font = ("Impact", 30))
+        self.title = Label(self, text = 'Welcome to Leap Mashup!', font = ("Impact", 30), background = "#F2A04E")
         self.title.pack()
 
         # filenames
-        self.fileframe = LabelFrame(self, text = "Files")
+        self.fileframe = LabelFrame(self, text = "Files", background = "#F2A04E")
         self.fileframe.pack()
 
         self.f1 = LabelFrame(self.fileframe)
@@ -109,7 +109,7 @@ class PaintBox(Frame):
         self.start.pack()
 
         # create Canvas component
-        self.paintCanvas = Canvas(self, width = "1000", height = "600", bd = 2)
+        self.paintCanvas = Canvas(self, width = "1000", height = "600", bd = 0, background = "#F2A04E")
         self.paintCanvas.pack()
         self.painter.set_canvas(self.paintCanvas)
 
